@@ -1,5 +1,0 @@
-package socks
-
-class msgqueue{
-
-}

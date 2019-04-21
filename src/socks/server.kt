@@ -10,15 +10,14 @@ import kotlin.collections.ArrayList
 
 class Server(val port: Int, val backlog: Int, val adress: String) {
 
-    var msgs: Queue<String> = Queue<String>()
-    var clients: ArrayList<Client> = ArrayList<Client>()
-    val server: ServerSocket = ServerSocket(port, backlog, InetAddress.getByName(adress))
+    var clients = ArrayList<DataClient>()
+    val server = ServerSocket(port, backlog, InetAddress.getByName(adress))
 
     fun mainloop() {
         Thread {
             while (true) {
                 val connection: Socket = server.accept()
-                val cl: Client = Client(connection.port, connection.inetAddress.toString())
+                val cl = DataClient(connection.inetAddress, connection.port)
                 if (cl !in clients){
                     clients.add(cl)
                 }
@@ -26,9 +25,12 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
         }.start()
         Thread {
             while (true){
-                val currcl: Client
+                val currcl: DataClient
                 for (currcl in clients) {
-
+                    val sock = Socket(currcl.adress,currcl.port)
+                    val input = DataInputStream(sock.getInputStream())
+                    val output = DataOutputStream(sock.getOutputStream())
+                    output.writeUTF(input.readUTF())
                 }
             }
         }.start()
