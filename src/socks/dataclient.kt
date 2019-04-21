@@ -12,16 +12,22 @@ class DataClient(val socket: Socket) {
 
     val receivedFromClient = ArrayList<String>()
     val needToSendToClient = ArrayList<String>()
+    var isAlive = true
 
     init {
         Thread {
-            while (true) {
-                val input = input.readUTF()
-                receivedFromClient.add(input)
+            while (isAlive) {
+                try {
+                    val input = input.readUTF()
+                    receivedFromClient.add(input)
+                } catch (ex: Exception){
+                    println("Клиент умер или что похуже")
+                    isAlive = false
+                }
             }
         }.start()
         Thread {
-            while (true) {
+            while (isAlive) {
                 if (needToSendToClient.size > 0) {
                     val firstElem = needToSendToClient.get(0)
                     needToSendToClient.removeAt(0)
