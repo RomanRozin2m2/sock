@@ -25,7 +25,9 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
                 for(c in clients){
                     if (c.receivedFromClient.size > 0) {
                         for (cd in clients) {
-                            cd.needToSendToClient.add(c.receivedFromClient.get(0))
+                            if (cd != c) {
+                                cd.needToSendToClient.add(c.receivedFromClient.get(0))
+                            }
                         }
                         c.receivedFromClient.removeAt(0)
                     }
