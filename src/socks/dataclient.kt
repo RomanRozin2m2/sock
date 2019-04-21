@@ -4,14 +4,15 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.lang.Thread.sleep
 import java.net.Socket
+import java.util.concurrent.CopyOnWriteArrayList
 
 class DataClient(val socket: Socket) {
 
     val input = DataInputStream(socket.getInputStream())
     val output = DataOutputStream(socket.getOutputStream())
 
-    val receivedFromClient = ArrayList<String>()
-    val needToSendToClient = ArrayList<String>()
+    val receivedFromClient = CopyOnWriteArrayList<String>()
+    val needToSendToClient = CopyOnWriteArrayList<String>()
     var isAlive = true
 
     init {

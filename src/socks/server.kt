@@ -4,11 +4,12 @@ import java.lang.Thread.sleep
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
-import kotlin.collections.ArrayList
+import java.util.concurrent.CopyOnWriteArrayList
+
 
 class Server(val port: Int, val backlog: Int, val adress: String) {
 
-    var clients = ArrayList<DataClient>()
+    var clients = CopyOnWriteArrayList<DataClient>()
     val server = ServerSocket(port, backlog, InetAddress.getByName(adress))
 
     fun mainloop() {
