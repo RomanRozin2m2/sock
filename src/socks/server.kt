@@ -1,11 +1,8 @@
 package socks
 
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Server(val port: Int, val backlog: Int, val adress: String) {
@@ -19,6 +16,18 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
                 val connection: Socket = server.accept()
                 val cl = DataClient(connection)
                 clients.add(cl)
+            }
+        }.start()
+        Thread {
+            while (true) {
+                for(c in clients){
+                    if (c.receivedFromClient.size > 0) {
+                        for (cd in clients) {
+                            cd.needToSendToClient.add(c.receivedFromClient.get(0))
+                            c.receivedFromClient.removeAt(0)
+                        }
+                    }
+                }
             }
         }.start()
     }
