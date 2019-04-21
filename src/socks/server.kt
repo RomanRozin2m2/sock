@@ -18,20 +18,10 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
             while (true) {
                 val connection: Socket = server.accept()
                 val cl = DataClient(connection.inetAddress, connection.port)
-                if (cl !in clients){
-                    clients.add(cl)
-                }
-            }
-        }.start()
-        Thread {
-            while (true){
-                val currcl: DataClient
-                for (currcl in clients) {
-                    val sock = Socket(currcl.adress,currcl.port)
-                    val input = DataInputStream(sock.getInputStream())
-                    val output = DataOutputStream(sock.getOutputStream())
-                    output.writeUTF(input.readUTF())
-                }
+                clients.add(cl)
+                val input = DataInputStream(connection.getInputStream())
+                val output = DataOutputStream(connection.getOutputStream())
+                println(1)
             }
         }.start()
     }
