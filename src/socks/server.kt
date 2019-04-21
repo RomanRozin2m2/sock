@@ -1,5 +1,6 @@
 package socks
 
+import java.lang.Thread.sleep
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
@@ -20,12 +21,13 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
         }.start()
         Thread {
             while (true) {
+                sleep(100)
                 for(c in clients){
                     if (c.receivedFromClient.size > 0) {
                         for (cd in clients) {
                             cd.needToSendToClient.add(c.receivedFromClient.get(0))
-                            c.receivedFromClient.removeAt(0)
                         }
+                        c.receivedFromClient.removeAt(0)
                     }
                 }
             }

@@ -2,6 +2,7 @@ package socks
 
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.lang.Thread.sleep
 import java.net.Socket
 
 class DataClient(val socket: Socket) {
@@ -26,6 +27,7 @@ class DataClient(val socket: Socket) {
                     needToSendToClient.removeAt(0)
                     output.writeUTF(firstElem)
                 }
+                sleep(100)
             }
         }.start()
     }
