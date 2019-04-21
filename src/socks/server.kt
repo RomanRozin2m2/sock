@@ -17,11 +17,8 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
         Thread {
             while (true) {
                 val connection: Socket = server.accept()
-                val cl = DataClient(connection.inetAddress, connection.port)
+                val cl = DataClient(connection)
                 clients.add(cl)
-                val input = DataInputStream(connection.getInputStream())
-                val output = DataOutputStream(connection.getOutputStream())
-                println(1)
             }
         }.start()
     }
