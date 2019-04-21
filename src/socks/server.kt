@@ -21,19 +21,32 @@ class Server(val port: Int, val backlog: Int, val adress: String) {
         }.start()
         Thread {
             while (true) {
+                clearCorpsesOfDeadClients()
                 sleep(100)
-                for(c in clients){
-                    if (c.receivedFromClient.size > 0) {
-                        for (cd in clients) {
-                            if (cd != c) {
-                                cd.needToSendToClient.add(c.receivedFromClient.get(0))
-                            }
-                        }
-                        c.receivedFromClient.removeAt(0)
-                    }
-                }
+                resendMessages()
             }
         }.start()
+    }
+
+    fun resendMessages() {
+        for(c in clients){
+            if (c.receivedFromClient.size > 0) {
+                for (cd in clients) {
+                    if (cd != c) {
+                        cd.needToSendToClient.add(c.receivedFromClient.get(0))
+                    }
+                }
+                c.receivedFromClient.removeAt(0)
+            }
+        }
+    }
+
+    fun clearCorpsesOfDeadClients() {
+        for (c in clients){
+            if (!c.isAlive){
+                clients.remove(c)
+            }
+        }
     }
 
 }
